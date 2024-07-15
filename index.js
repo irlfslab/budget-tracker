@@ -59,8 +59,9 @@ function addTransaction(source, amount){
 
 form.addEventListener("submit", event => {
     event.preventDefault();
+    //console.log(form.source.value, form.amount.value);
     if(form.source.value.trim() === "" || form.amount.value === ""){
-        return alert("Please add proper values!");
+        return alert("Please input values!");
     }
     addTransaction(form.source.value.trim(), Number(form.amount.value));
     updateTotals();
