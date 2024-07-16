@@ -6,26 +6,26 @@ const balance = document.getElementById("balance");
 const income = document.getElementById("income");
 const expense = document.getElementById("expense");
 
-let transactions = localStorage.getItem("transactions") !== null ? JSON.parse(localStorage.getItem("transactions")) : [];
+let trans = localStorage.getItem("trans") !== null ? JSON.parse(localStorage.getItem("trans")) : [];
 
 
-function updateTotals(){
-    const updatedIncome = transactions
-                            .filter(transaction => transaction.amount > 0)
-                            .reduce((total, transaction) => total += transaction.amount, 0);
+function updTotals(){
+    const updIncome = trans
+                            .filter(tran => tran.amount > 0)
+                            .reduce((total, tran) => total += tran.amount, 0);
 
-    const updatedExpense = transactions
-                            .filter(transaction => transaction.amount < 0)
-                            .reduce((total, transaction) => total += Math.abs(transaction.amount), 0);
+    const updExpense = trans
+                            .filter(tran => tran.amount < 0)
+                            .reduce((total, tran) => total += Math.abs(tran.amount), 0);
 
-    updatedBalance = updatedIncome - updatedExpense;
-    balance.textContent = updatedBalance;
-    income.textContent = updatedIncome;
-    expense.textContent = updatedExpense;
+    let updBalance = updIncome - updExpense;
+    balance.textContent = updBalance;
+    income.textContent = updIncome;
+    expense.textContent = updExpense;
     
 }
 
-function generateTemplate(id, source, amount, time){
+function genHist(id, source, amount, time){
     return `<li data-id="${id}">
                 <p>
                     <span>${source}</span>
@@ -36,75 +36,74 @@ function generateTemplate(id, source, amount, time){
             </li>`;
 }
 
-function addTransactionDOM(id, source, amount, time){
+function addTranHist(id, source, amount, time){
     if(amount > 0){
-        incomeList.innerHTML += generateTemplate(id, source, amount, time);
+        incomeList.innerHTML += genHist(id, source, amount, time);
     } else {
-        expenseList.innerHTML += generateTemplate(id, source, amount, time);
+        expenseList.innerHTML += genHist(id, source, amount, time);
     }
 }
 
-function addTransaction(source, amount){
+function addTran(source, amount){
     const time = new Date();
-    const transaction = {
+    const tran = {
         id: Math.floor(Math.random()*100000),
         source: source,
         amount: amount,
         time: `${time.toLocaleTimeString()} ${time.toLocaleDateString()}`
     };
-    transactions.push(transaction);
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-    addTransactionDOM(transaction.id, source, amount, transaction.time);
+    trans.push(tran);
+    localStorage.setItem("trans", JSON.stringify(trans));
+    addTranHist(tran.id, source, amount, tran.time);
 }
 
 form.addEventListener("submit", event => {
     event.preventDefault();
-    //console.log(form.source.value, form.amount.value);
     if(form.source.value.trim() === "" || form.amount.value === ""){
-        return alert("Please input values!");
+        return alert("Please add proper values!");
     }
-    addTransaction(form.source.value.trim(), Number(form.amount.value));
-    updateTotals();
+    addTran(form.source.value.trim(), Number(form.amount.value));
+    updTotals();
     form.reset();
 })
 
-function getTransaction(){
-    transactions.forEach(transaction => {
-        if(transaction.amount > 0){
-            incomeList.innerHTML += generateTemplate(transaction.id, transaction.source, transaction.amount, transaction.time);
+function getTran(){
+    trans.forEach(tran => {
+        if(tran.amount > 0){
+            incomeList.innerHTML += genHist(tran.id, tran.source, tran.amount, tran.time);
         } else {
-            expenseList.innerHTML += generateTemplate(transaction.id, transaction.source, transaction.amount, transaction.time);
+            expenseList.innerHTML += genHist(tran.id, tran.source, tran.amount, tran.time);
         }
     });
 }
 
-function deleteTransaction(id){
-    transactions = transactions.filter(transaction => {
-        return transaction.id !== id;
+function delTran(id){
+    trans = trans.filter(tran => {
+        return tran.id !== id;
     });
-    localStorage.setItem("transactions", JSON.stringify(transactions));
+    localStorage.setItem("trans", JSON.stringify(trans));
 }
 
 incomeList.addEventListener("click", event => {
     if(event.target.classList.contains("delete")){
         event.target.parentElement.remove();
-        deleteTransaction(Number(event.target.parentElement.dataset.id));
-        updateTotals();
+        delTran(Number(event.target.parentElement.dataset.id));
+        updTotals();
     }
 });
 
 expenseList.addEventListener("click", event => {
     if(event.target.classList.contains("delete")){
         event.target.parentElement.remove();
-        deleteTransaction(Number(event.target.parentElement.dataset.id));
-        updateTotals();
+        delTran(Number(event.target.parentElement.dataset.id));
+        updTotals();
     }
 });
 
 
 function init(){
-    updateTotals();
-    getTransaction();
+    updTotals();
+    getTran();
 }
 
 init();
