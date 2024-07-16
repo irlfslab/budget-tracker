@@ -5,6 +5,7 @@ const expenseList = document.querySelector("ul.expense-list");
 const balance = document.getElementById("balance");
 const income = document.getElementById("income");
 const expense = document.getElementById("expense");
+const vmsg = document.getElementById("msg");
 
 let trans = localStorage.getItem("trans") !== null ? JSON.parse(localStorage.getItem("trans")) : [];
 
@@ -60,11 +61,13 @@ function addTran(source, amount){
 form.addEventListener("submit", event => {
     event.preventDefault();
     if(form.source.value.trim() === "" || form.amount.value === ""){
-        return alert("Please add proper values!");
+        vmsg.innerText = "Please input values!";
+      //  return alert("Please input values!");
     }
     addTran(form.source.value.trim(), Number(form.amount.value));
     updTotals();
     form.reset();
+    vmsg.innerText = "";
 })
 
 function getTran(){
@@ -107,3 +110,4 @@ function init(){
 }
 
 init();
+
