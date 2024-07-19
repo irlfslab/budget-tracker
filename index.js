@@ -82,8 +82,10 @@ function getTran(){
 
 function delTran(id){
     trans = trans.filter(tran => {
+        //console.log(tran.id, id);
         return tran.id !== id;
     });
+    //console.log(trans);
     localStorage.setItem("trans", JSON.stringify(trans));
 }
 
