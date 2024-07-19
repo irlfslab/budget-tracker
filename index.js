@@ -11,6 +11,16 @@ let trans = localStorage.getItem("trans") !== null ? JSON.parse(localStorage.get
 
 
 function updTotals(){
+    //const updIncome = trans.filter(tran => {
+    //    return tran.amount > 0;
+    // })
+    //console.log(updIncome);
+    
+    //const updExpense = trans.filter(tran => {
+    //    return tran.amount < 0;
+    //})
+    //console.log(updExpense);
+    
     const updIncome = trans
                             .filter(tran => tran.amount > 0)
                             .reduce((total, tran) => total += tran.amount, 0);
