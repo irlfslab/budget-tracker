@@ -89,6 +89,7 @@ function delTran(id){
 
 incomeList.addEventListener("click", event => {
     if(event.target.classList.contains("delete")){
+        //console.log(event.target);
         event.target.parentElement.remove();
         delTran(Number(event.target.parentElement.dataset.id));
         updTotals();
@@ -97,6 +98,7 @@ incomeList.addEventListener("click", event => {
 
 expenseList.addEventListener("click", event => {
     if(event.target.classList.contains("delete")){
+        //console.log(event.target);
         event.target.parentElement.remove();
         delTran(Number(event.target.parentElement.dataset.id));
         updTotals();
